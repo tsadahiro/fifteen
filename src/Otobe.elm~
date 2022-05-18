@@ -1,0 +1,76 @@
+module Otobe exposing(..)
+
+import Html exposing(Html)
+import Svg exposing(..)
+import Svg.Attributes exposing(..)
+import Svg.Events exposing(..)
+import Browser
+
+main = Browser.sandbox {init=init, update=update, view=view}
+
+--type alias Model =  Bool --true/false
+type alias Model = List {x:Int, y:Int, n:Int}--listに加えていく
+type alias Position = {x:Int, y:Int}
+type Msg = Slide Position --入れ替える、スイッチ
+
+init: Model
+init = List.map (\i -> {x=modBy 5 i, y=i//5, n=i})
+    (List.range 0 24)
+{-
+  [{x=1, y=1, onoff = False}
+        ,{x=1, y=2, onoff = False}
+        ,{x=1, y=3, onoff = False}
+        ,{x=2, y=1, onoff = False}
+        ,{x=2, y=2, onoff = False}
+        ,{x=2, y=3, onoff = False}
+        ,{x=3, y=1, onoff = False}
+        ,{x=3, y=2, onoff = False}
+        ,{x=3, y=3, onoff = False}]
+-}
+
+update: Msg -> Model -> Model --モデル作りかえる 大文字は型 小文字は変数
+update msg model =
+  case msg of
+    --Toggle -> not model --trueとfalseを切り替える演算子は"not" modelが一つだけの場合
+    --Toggle -> {model | onoff = not model.onoff}
+    Slide pos -> slide model pos--現在の状況のクリックされた場所をtoggleする
+
+slide: Model -> Position -> Model
+slide model pos =
+  let
+    clicked = List.filter (\p -> (p.x==pos.x && p.y==pos.y)) model
+  in
+  List.map (\pp -> if (pp.x-pos.x)^2 + (pp.y-pos.y)^2 == 1 && pp.n == 0 then
+              {pp|x=pos.x, y=pos.y}
+              else
+                pp
+              ) model
+
+
+unit = 50
+
+piece p =
+      rect [x (String.fromInt (p.x * unit))
+             ,y (String.fromInt (p.y * unit))
+             ,width (String.fromInt unit)
+             ,height (String.fromInt unit)
+             ,stroke (if p.n==0 then
+                        "white"
+                        else
+                          "black")
+             ,rx (String.fromInt (unit//10))
+             ,ry (String.fromInt (unit//10))
+             ,fill (if p.n==0 then
+                      "white"
+                      else
+                        "pink"
+              )
+             ,onClick (Slide {x=p.x, y = p.y})]--circleをクリックした時msgを発生させる
+             [
+             ]
+
+view: Model -> Html Msg --モデルを描画する
+view model =
+  svg[width "600"
+      ,height "600"]
+    (List.map piece model)--model野中の一つ一つを描いたものをリストとして返してくれる
