@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Fifteen puzzle for 情報基礎数学</title>
+  <title>Fifteen</title>
   <style>body { padding: 0; margin: 0; }</style>
 </head>
 
@@ -6804,6 +6804,22 @@ var $author$project$Fifteen$pieceSvg = function (p) {
 					[
 						$elm$svg$Svg$text(
 						(!p.n) ? '' : $elm$core$String$fromInt(p.n))
+					])),
+				A2(
+				$elm$svg$Svg$text_,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$x(
+						$elm$core$String$fromInt((($author$project$Fifteen$unit * 1) / 10) | 0)),
+						$elm$svg$Svg$Attributes$y(
+						$elm$core$String$fromInt((($author$project$Fifteen$unit * 2) / 10) | 0)),
+						$elm$svg$Svg$Attributes$stroke('red'),
+						$elm$svg$Svg$Attributes$fill('pink')
+					]),
+				_List_fromArray(
+					[
+						$elm$svg$Svg$text(
+						(!p.n) ? '' : $elm$core$String$fromInt((p.x + (4 * p.y)) + 1))
 					]))
 			]));
 };
